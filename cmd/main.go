@@ -5,6 +5,7 @@ import (
 
 	"docker-interface-exporter/pkg/containers"
 	"docker-interface-exporter/pkg/tools"
+	"docker-interface-exporter/collector"
 	"flag"
 	"fmt"
 	"os"
@@ -38,7 +39,7 @@ func main() {
 	glog.Infoln("Starting collectd_exporter", version.Info())
 	glog.Infoln("Build context", version.BuildContext())
 
-	c := newCollectdCollector()
+	c,_ := collector.NewNodeCollector("container_interface")
 	prometheus.MustRegister(c)
 
 	startCollectdServer(context.Background(), c)

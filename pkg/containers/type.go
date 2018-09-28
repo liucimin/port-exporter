@@ -45,12 +45,13 @@ type MetricSpec struct {
 	// Display Units for the stats.
 	Units string `json:"units"`
 }
+type LinkOperState uint8
 
 type InterfaceStats struct {
 	// The name of the interface.
 	Name string `json:"name"`
 	// The stat of the interface up or down.
-	State string `json:"state"`
+	State LinkOperState `json:"state"`
 	// Cumulative count of bytes received.
 	RxBytes uint64 `json:"rx_bytes"`
 	// Cumulative count of packets received.

@@ -10,6 +10,7 @@ import (
 	"docker-interface-exporter/pkg/tools"
 	"docker-interface-exporter/pkg/containers"
 
+	"github.com/vishvananda/netlink"
 )
 
 const (
@@ -51,12 +52,12 @@ func (self *DockerContainerHandler)GetContainerInfos() []*containers.Containerin
 	var cInfos []*containers.Containerinfo
 
 	//get all the container in the mechine
-	containers, err := self.cli.ContainerList(context.Background(), types.ContainerListOptions{})
+	cons, err := self.cli.ContainerList(context.Background(), types.ContainerListOptions{})
 	if err != nil {
 		panic(err)
 	}
 
-	for _, container := range containers {
+	for _, container := range cons {
 		glog.Infof("%s %s\n",container.ID, container.Image)
 
 		var cInfo containers.Containerinfo
@@ -71,21 +72,27 @@ func (self *DockerContainerHandler)GetContainerInfos() []*containers.Containerin
 		needGetNet := isNeedNetwork(&containerJson)
 		//just container net save the pid
 		if needGetNet {
-
-
-
 			//save the pid path
 			cInfo = containers.Containerinfo{
 				Id :	container.ID,
 				HasNetwork :	true,
 				Namespace : getNetworkNamespace(&containerJson),
-
-
 			}
 
 			//save the interface stat
+			interfaceStat, err := tools.GetInterfaceStat(cInfo.Namespace)
+			if err != nil{
+				glog.Warningf("GetInterfaceStat %v Failed", containerJson.Name)
+				continue
+			}
+			//save the name and state in container info
+			for name, state := range interfaceStat{
 
-			tools.GetInterfaceStat(cInfo.Namespace)
+				cInfo.Network.Interfaces = append(cInfo.Network.Interfaces, containers.InterfaceStats{
+					Name: name,
+					State: containers.LinkOperState(state),
+				})
+			}
 
 		}else{
 
@@ -110,8 +117,7 @@ func (self *DockerContainerHandler)GetContainerInfos() []*containers.Containerin
 
 
 	}
-
-
+	return cInfos
 }
 
 func (self *DockerContainerHandler)UpdateContainerInfos() {
@@ -130,7 +136,7 @@ func getNetworkNamespace(c *types.ContainerJSON) string{
 		// Docker reports pid 0 for an exited container.
 		return ""
 	}
-	return fmt.Sprintf("/proc/%v", c.State.Pid)
+	return fmt.Sprintf("/proc/%d/ns/net", c.State.Pid)
 }
 
 
