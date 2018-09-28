@@ -92,6 +92,7 @@ type Containerinfo struct{
 	// Time at which the container was created.
 	CreationTime time.Time `json:"creation_time,omitempty"`
 
+	Name string
 	// Other names by which the container is known within a certain namespace.
 	// This is unique within that namespace.
 	Aliases []string `json:"aliases,omitempty"`
