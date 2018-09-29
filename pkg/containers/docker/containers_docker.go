@@ -10,7 +10,6 @@ import (
 	"docker-interface-exporter/pkg/tools"
 	"docker-interface-exporter/pkg/containers"
 
-	"github.com/vishvananda/netlink"
 )
 
 const (
@@ -77,6 +76,7 @@ func (self *DockerContainerHandler)GetContainerInfos() []*containers.Containerin
 				Id :	container.ID,
 				HasNetwork :	true,
 				Namespace : getNetworkNamespace(&containerJson),
+				Labels: containerJson.Config.Labels,
 			}
 
 			//save the interface stat
@@ -99,6 +99,7 @@ func (self *DockerContainerHandler)GetContainerInfos() []*containers.Containerin
 			cInfo =  containers.Containerinfo{
 				Id : container.ID,
 				HasNetwork : false,
+				Labels: containerJson.Config.Labels,
 			}
 
 		}

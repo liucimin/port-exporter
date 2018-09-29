@@ -1,7 +1,7 @@
 package cache
 
 import(
-
+	"reflect"
 	cmap "github.com/streamrail/concurrent-map"
 
 )
@@ -13,6 +13,27 @@ type Cache struct{
 
 }
 
+func NewCache() *Cache{
+	return &Cache{db:cmap.New()}
+}
+
+
+func (self *Cache) SetFromList(values []interface{}){
+
+
+	//
+	for value := range values{
+
+		t := reflect.ValueOf(value)
+		fieldSturct := t.FieldByName("Name")
+		if !fieldSturct.IsValid() || !fieldSturct.IsNil(){
+			continue
+		}
+		key := fieldSturct.String()
+		self.db.Set(key,value)
+
+	}
+}
 
 
 func (self *Cache) Set(id string, value interface{}){
