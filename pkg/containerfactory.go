@@ -1,14 +1,15 @@
 package pkg
 
 import (
-	"reflect"
-	"docker-interface-exporter/pkg/containers/docker"
 	"fmt"
-	"docker-interface-exporter/pkg/containers"
+	"reflect"
+
+	"github.com/port-exporter/pkg/containers/docker"
+	"github.com/port-exporter/pkg/containers"
 )
 
-// implement utilities for instantiating the supported core.Driver
-// (state, network and endpoint) instances
+// implement utilities for instantiating the supported
+// containerDriver
 
 type driverConfigTypes struct {
 	DriverType reflect.Type

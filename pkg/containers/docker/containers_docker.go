@@ -7,8 +7,8 @@ import (
 	"github.com/docker/docker/api/types"
 	"context"
 	"fmt"
-	"docker-interface-exporter/pkg/tools"
-	"docker-interface-exporter/pkg/containers"
+	"github.com/port-exporter/pkg/tools"
+	"github.com/port-exporter/pkg/containers"
 
 )
 

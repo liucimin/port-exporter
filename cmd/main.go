@@ -4,7 +4,7 @@ package main
 import (
 
 
-	"docker-interface-exporter/collector"
+	"github.com/port-exporter/collector"
 	"flag"
 	"github.com/golang/glog"
 	"net/http"

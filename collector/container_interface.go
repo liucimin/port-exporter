@@ -3,9 +3,9 @@ package collector
 import (
 
 	"github.com/prometheus/client_golang/prometheus"
-	"docker-interface-exporter/pkg/containers"
-	"docker-interface-exporter/pkg/cache"
-	"docker-interface-exporter/pkg"
+	"github.com/port-exporter/pkg/containers"
+	"github.com/port-exporter/pkg/cache"
+	"github.com/port-exporter/pkg"
 	"regexp"
 	"github.com/golang/glog"
 )
