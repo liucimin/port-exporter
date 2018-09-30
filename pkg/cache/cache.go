@@ -46,12 +46,11 @@ func (self *Cache) Set(id string, value interface{}){
 
 func (self *Cache) Get(id string) interface{}{
 
-
 	containerInfo, ok := self.db.Get(id)
 	if ok {
 		return containerInfo
 	}
-
+	return nil
 }
 
 

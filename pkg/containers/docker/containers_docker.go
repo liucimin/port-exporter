@@ -31,17 +31,12 @@ type DockerContainerHandler struct{
 
 
 
-func NewContainerHandler() containers.ContainerHandler{
+func (self *DockerContainerHandler)Init(){
 	cli, err := client.NewEnvClient()
 	if err != nil {
 		panic(err)
 	}
-
-	return &DockerContainerHandler{
-
-		cli,
-
-	}
+	self.cli = cli
 }
 
 

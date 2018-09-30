@@ -6,7 +6,7 @@ package containers
 
 type ContainerHandler interface{
 
-
+	Init()
 	GetContainerInfos() []*Containerinfo
 	UpdateContainerInfos()
 

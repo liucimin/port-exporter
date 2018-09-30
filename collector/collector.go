@@ -30,12 +30,12 @@ type Collector interface {
 	Collect(ch chan<- prometheus.Metric) error
 }
 
-// NodeCollector implements the prometheus.Collector interface.
-type nodeCollector struct {
+// PortCollector implements the prometheus.Collector interface.
+type PortCollector struct {
 	Collectors map[string]Collector
 }
-// NewNodeCollector creates a new NodeCollector
-func NewNodeCollector(cs ...string) (*nodeCollector, error) {
+// NewCollector creates a new Collector
+func NewPortCollector(cs ...string) (*PortCollector, error) {
 	collectors := make(map[string]Collector)
 	for _, c := range cs {
 		collector, ok := collectorMap[c]
@@ -47,19 +47,24 @@ func NewNodeCollector(cs ...string) (*nodeCollector, error) {
 
 	}
 
-	return &nodeCollector{Collectors: collectors}, nil
+	return &PortCollector{Collectors: collectors}, nil
 
 }
 
 
 // Describe implements the prometheus.Collector interface.
-func (n nodeCollector) Describe(ch chan<- *prometheus.Desc) {
-	//ch <- scrapeDurationDesc
+func (n PortCollector) Describe(ch chan<- *prometheus.Desc) {
+	ch <- prometheus.NewDesc(
+		"container_interface_exporter",
+		"container_interface_exporter: A collector of containers.",
+		[]string{"collector"},
+		nil,
+	)
 	//ch <- scrapeSuccessDesc
 }
 
 // Collect implements the prometheus.Collector interface.
-func (n nodeCollector) Collect(ch chan<- prometheus.Metric) {
+func (n PortCollector) Collect(ch chan<- prometheus.Metric) {
 	wg := sync.WaitGroup{}
 	wg.Add(len(n.Collectors))
 	for name, c := range n.Collectors {

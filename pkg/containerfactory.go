@@ -1,10 +1,10 @@
-package tools
+package pkg
 
 import (
 	"reflect"
 	"docker-interface-exporter/pkg/containers/docker"
-	"docker-interface-exporter/pkg/containers"
 	"fmt"
+	"docker-interface-exporter/pkg/containers"
 )
 
 // implement utilities for instantiating the supported core.Driver

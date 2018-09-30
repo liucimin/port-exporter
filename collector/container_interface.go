@@ -4,9 +4,10 @@ import (
 
 	"github.com/prometheus/client_golang/prometheus"
 	"docker-interface-exporter/pkg/containers"
-	"docker-interface-exporter/pkg/tools"
 	"docker-interface-exporter/pkg/cache"
+	"docker-interface-exporter/pkg"
 	"regexp"
+	"github.com/golang/glog"
 )
 func init() {
 	registerCollector("container_interface", NewContainerInterfaceCollector())
@@ -51,12 +52,13 @@ func getContaierLabels(c *containers.Containerinfo) map[string] string{
 
 }
 
-// NewARPCollector returns a new Collector exposing ARP stats.
+// NewContainerInterfaceCollector returns a new Collector exposing Container stats.
 func NewContainerInterfaceCollector() (Collector) {
 
 
-	if ch, err := tools.NewContainerDriver("docker");err == nil{
-
+	if ch, err := pkg.NewContainerDriver("docker");err == nil{
+		//init the containerDriver
+		ch.Init()
 		return &ContainerInterfaceCollector{
 			containerHd: ch,
 			cms: []containerMetric{
@@ -114,6 +116,7 @@ func (self *ContainerInterfaceCollector)Collect(ch chan<- prometheus.Metric) err
 	}*/
 
 	containerInfos := self.containerHd.GetContainerInfos()
+	glog.Infof("containerInfos %v",containerInfos)
 	for _, containerInfo := range containerInfos{
 
 		rawLabels := getContaierLabels(containerInfo)
