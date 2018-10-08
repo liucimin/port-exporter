@@ -44,14 +44,16 @@ func (self *Cache) Set(id string, value interface{}){
 
 }
 
-func (self *Cache) Get(id string) interface{}{
+func (self *Cache) Get(id string) (interface{}, bool){
 
 	containerInfo, ok := self.db.Get(id)
 	if ok {
-		return containerInfo
+		return containerInfo, true
 	}
-	return nil
+	return nil, false
 }
 
+func (self *Cache) Items() map[string]interface{} {
 
-
+	return self.db.Items()
+}
