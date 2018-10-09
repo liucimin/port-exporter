@@ -170,6 +170,19 @@
   revision = "418d78d0b9a7b7de3a6bbc8a23def624cc977bb2"
 
 [[projects]]
+  digest = "1:8832120e0a822e4c956df6d4ffd7cb26a845052b53c15637ac08c8a68a95057d"
+  name = "github.com/socketplane/libovsdb"
+  packages = [
+    ".",
+    "Godeps/_workspace/src/github.com/cenkalti/hub",
+    "Godeps/_workspace/src/github.com/cenkalti/rpc2",
+    "Godeps/_workspace/src/github.com/cenkalti/rpc2/jsonrpc",
+  ]
+  pruneopts = "UT"
+  revision = "555a561202ec17fe6c068038a35291ce9ba33066"
+  version = "v0.1"
+
+[[projects]]
   branch = "master"
   digest = "1:28f46eae9e3a794bb0dbd84d75fde21ee329445c150772349b05bd5750a733d0"
   name = "github.com/streamrail/concurrent-map"
@@ -237,6 +250,7 @@
     "github.com/golang/glog",
     "github.com/prometheus/client_golang/prometheus",
     "github.com/prometheus/common/version",
+    "github.com/socketplane/libovsdb",
     "github.com/streamrail/concurrent-map",
     "github.com/vishvananda/netlink",
     "github.com/vishvananda/netns",
