@@ -34,7 +34,7 @@ func main() {
 	glog.Infoln("Starting collectd_exporter", version.Info())
 	glog.Infoln("Build context", version.BuildContext())
 
-	c,_ := collector.NewPortCollector("container_interface")
+	c,_ := collector.NewPortCollector("container_interface", "ovs_db")
 	prometheus.MustRegister(c)
 
 	http.Handle(*metricsPath, prometheus.Handler())

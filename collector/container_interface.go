@@ -76,7 +76,7 @@ func NewContainerInterfaceCollector() (Collector) {
 								value := float64(eth.State)
 								values = append(values, metricValue{
 									value:  value,
-									labels: []string{eth.Name},
+									labelValues: []string{eth.Name},
 								})
 
 							}
@@ -131,7 +131,7 @@ func (self *ContainerInterfaceCollector)Collect(ch chan<- prometheus.Metric) err
 		for _, cm := range self.cms {
 			desc := cm.desc(labels)
 			for _, metricValue := range cm.getValues(containerInfo) {
-				ch <- prometheus.MustNewConstMetric(desc, cm.valueType, float64(metricValue.value), append(values, metricValue.labels...)...)
+				ch <- prometheus.MustNewConstMetric(desc, cm.valueType, float64(metricValue.value), append(values, metricValue.labelValues...)...)
 			}
 		}
 	}

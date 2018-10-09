@@ -10,7 +10,7 @@ import (
 // within a parent containerMetric.
 type metricValue struct {
 	value  float64
-	labels []string
+	labelValues []string
 }
 
 type metricValues []metricValue
