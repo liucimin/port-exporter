@@ -47,7 +47,30 @@ func sanitizeLabelName(name string) string {
 func getContaierLabels(c *containers.Containerinfo) map[string] string{
 
 	//containerLabels := make(map[string] string)
-	return c.Labels
+
+	var app, podName, namespace, containerName string
+
+	if v, ok :=c.Labels["app"]; ok {
+		app = v
+	}
+	if v, ok :=c.Labels["io.kubernetes.pod.name"]; ok {
+		podName = v
+	}
+	if v, ok := c.Labels["io.kubernetes.pod.namespace"]; ok {
+		namespace = v
+	}
+	if v, ok := c.Labels["io.kubernetes.container.name"]; ok {
+		containerName = v
+	}
+
+	set := map[string]string{
+		"app":    app,
+		"pod_name":         podName,
+		"namespace":        namespace,
+		"container_name":   containerName,
+	}
+	return set
+
 
 
 }

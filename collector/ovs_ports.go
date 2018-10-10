@@ -109,6 +109,22 @@ func NewOvsdbInterfaceCollector() (Collector) {
 				},
 
 			},
+			{
+				name:      "ovs_port_link_state",
+				help:      "The ovs port link state",
+				valueType: prometheus.GaugeValue,
+				extraLabels: []string{"name", "endpointId"},
+				getValues: func(c *ovs.OvsPortInfo) metricValues {
+
+					values := make(metricValues, 0, 1)
+					values = append(values, metricValue{
+						value:  c.State,
+						labelValues: []string{c.Name, c.EndpointId},
+					})
+					return values
+				},
+
+			},
 
 		},
 	}

@@ -47,8 +47,6 @@ func NewOvsdbHandler() *OvsdbHandler {
 	ovsHandler.populateCache(*initial)
 
 
-
-
 	// Return the new OVS driver
 	return ovsHandler
 }
@@ -58,21 +56,24 @@ func NewOvsdbHandler() *OvsdbHandler {
 func (self *OvsdbHandler) populateCache(updates libovsdb.TableUpdates) {
 
 	for table, tableUpdate := range updates.Updates {
+
+		glog.V(4).Infof("table %s",table)
+
 		if _, ok := self.ovsdbCache.Get(table); !ok {
-			self.ovsdbCache.Set(table, make(map[string]libovsdb.Row))
+			self.ovsdbCache.Set(table, make(map[libovsdb.UUID]libovsdb.Row))
 		}
 		for uuid, row := range tableUpdate.Rows {
 			empty := libovsdb.Row{}
 			if !reflect.DeepEqual(row.New, empty) {
 
 				if tableCache, ok := self.ovsdbCache.Get(table); ok {
-					tableCache.(map[string]libovsdb.Row)[uuid] = row.New
+					tableCache.(map[libovsdb.UUID]libovsdb.Row)[libovsdb.UUID{GoUuid: uuid}] = row.New
 				}
 
 			} else {
 				if tableCache, ok := self.ovsdbCache.Get(table); ok {
 
-					delete(tableCache.(map[string]libovsdb.Row), uuid)
+					delete(tableCache.(map[libovsdb.UUID]libovsdb.Row), libovsdb.UUID{GoUuid: uuid})
 				}
 
 			}
@@ -107,41 +108,41 @@ func (self *OvsdbHandler) GetInterfaces() []*ovs.OvsPortInfo{
 						switch key {
 						case "collisions":
 							//
-							ovsPortInfo.Statistics.Collisions = value.(uint64)
+							ovsPortInfo.Statistics.Collisions = value.(float64)
 						case "rx_bytes":
 							//
-							ovsPortInfo.Statistics.RxBytes = value.(uint64)
+							ovsPortInfo.Statistics.RxBytes = value.(float64)
 
 						case "rx_crc_err":
 							//
-							ovsPortInfo.Statistics.RxCrcErr = value.(uint64)
+							ovsPortInfo.Statistics.RxCrcErr = value.(float64)
 						case "rx_dropped":
 							//
-							ovsPortInfo.Statistics.RxDropped = value.(uint64)
+							ovsPortInfo.Statistics.RxDropped = value.(float64)
 						case "rx_errors":
 							//
-							ovsPortInfo.Statistics.RxErrors = value.(uint64)
+							ovsPortInfo.Statistics.RxErrors = value.(float64)
 						case "rx_frame_err":
 							//
-							ovsPortInfo.Statistics.RxFrameErr = value.(uint64)
+							ovsPortInfo.Statistics.RxFrameErr = value.(float64)
 						case "rx_over_err":
 							//
-							ovsPortInfo.Statistics.RxOverErr = value.(uint64)
+							ovsPortInfo.Statistics.RxOverErr = value.(float64)
 						case "rx_packets":
 							//
-							ovsPortInfo.Statistics.RxPackets = value.(uint64)
+							ovsPortInfo.Statistics.RxPackets = value.(float64)
 						case "tx_bytes":
 							//
-							ovsPortInfo.Statistics.TxBytes = value.(uint64)
+							ovsPortInfo.Statistics.TxBytes = value.(float64)
 						case "tx_dropped":
 							//
-							ovsPortInfo.Statistics.TxDropped = value.(uint64)
+							ovsPortInfo.Statistics.TxDropped = value.(float64)
 						case "tx_errors":
 							//
-							ovsPortInfo.Statistics.TxErrors = value.(uint64)
+							ovsPortInfo.Statistics.TxErrors = value.(float64)
 						case "tx_packets":
 							//
-							ovsPortInfo.Statistics.TxPackets = value.(uint64)
+							ovsPortInfo.Statistics.TxPackets = value.(float64)
 						}
 					}
 
@@ -152,6 +153,11 @@ func (self *OvsdbHandler) GetInterfaces() []*ovs.OvsPortInfo{
 						case "endpoint-id":
 							ovsPortInfo.EndpointId = value.(string)
 						}
+					}
+					tmpState, _ := row.Fields["link_state"].(string)
+					if tmpState == "up"{
+
+						ovsPortInfo.State = 1.0
 					}
 
 					ovsPortInfoList = append(ovsPortInfoList, &ovsPortInfo)
