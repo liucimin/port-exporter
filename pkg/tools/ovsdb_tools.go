@@ -59,9 +59,12 @@ func (self *OvsdbHandler) populateCache(updates libovsdb.TableUpdates) {
 
 		glog.V(4).Infof("table %s",table)
 
+		//first get the table
 		if _, ok := self.ovsdbCache.Get(table); !ok {
 			self.ovsdbCache.Set(table, make(map[libovsdb.UUID]libovsdb.Row))
 		}
+
+		//for each all the row to save into the table
 		for uuid, row := range tableUpdate.Rows {
 			empty := libovsdb.Row{}
 			if !reflect.DeepEqual(row.New, empty) {
@@ -71,6 +74,8 @@ func (self *OvsdbHandler) populateCache(updates libovsdb.TableUpdates) {
 				}
 
 			} else {
+
+				//the row is empty so delete it from the cache
 				if tableCache, ok := self.ovsdbCache.Get(table); ok {
 
 					delete(tableCache.(map[libovsdb.UUID]libovsdb.Row), libovsdb.UUID{GoUuid: uuid})
@@ -81,7 +86,7 @@ func (self *OvsdbHandler) populateCache(updates libovsdb.TableUpdates) {
 	}
 }
 
-
+//get the ovsdb's interface info
 func (self *OvsdbHandler) GetInterfaces() []*ovs.OvsPortInfo{
 
 	ovsPortInfoList := []*ovs.OvsPortInfo{}

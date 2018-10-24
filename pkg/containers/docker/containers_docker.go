@@ -34,7 +34,7 @@ type DockerContainerHandler struct{
 func (self *DockerContainerHandler)Init(){
 	cli, err := client.NewEnvClient()
 	if err != nil {
-		panic(err)
+		glog.Fatal(err)
 	}
 	self.cli = cli
 }
@@ -52,7 +52,7 @@ func (self *DockerContainerHandler)GetContainerInfos() []*containers.Containerin
 	}
 
 	for _, container := range cons {
-		glog.Infof("%s %s\n",container.ID, container.Image)
+		glog.V(4).Infof("%s %s\n",container.ID, container.Image)
 
 		var cInfo containers.Containerinfo
 		//inspect all the container to get container info
