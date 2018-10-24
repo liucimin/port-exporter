@@ -77,8 +77,8 @@ func (self *DockerContainerHandler)GetContainerInfos() []*containers.Containerin
 			//save the interface stat
 			interfaceStat, err := tools.GetInterfaceStat(cInfo.Namespace)
 			if err != nil{
-				glog.Warningf("GetInterfaceStat %v Failed", containerJson.Name)
-				continue
+			    glog.Warningf("GetInterfaceStat %v Failed %v", containerJson.Name, err)	
+                            continue
 			}
 			//save the name and state in container info
 			for name, state := range interfaceStat{
