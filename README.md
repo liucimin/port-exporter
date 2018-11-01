@@ -18,14 +18,12 @@ below list all existing collectors and the supported systems.
 
 | Name                | Description                                          | OS    |
 | ------------------- | ---------------------------------------------------- | ----- |
-| ovs_db              | Exposes ovs ports statistics from ovsdb.             | Linux |
-| container_interface | Exposes container interfaces state from `container`. | Linux |
 
 
 
 ## Building and running
 
-Prerequisites:
+### Prerequisites:
 
 - [Go compiler](https://golang.org/dl/) or Docker
 
@@ -33,7 +31,7 @@ Prerequisites:
 
   
 
-Building with Go Env:
+### Building with Go Env:
 
 ```
 go get github.com/liucimin/port-exporter
@@ -48,13 +46,29 @@ To see all available configuration flags:
 ./port_exporter -h
 ```
 
-Building with Docker:
+### Building with Docker:
 
 ```
 go get github.com/liucimin/port-exporter
 cd ${GOPATH-$HOME/go}/src/github.com/liucimin/port-exporter
-make with-docker
+make docker-build
 ```
+
+### Running  with container:
+
+```
+docker run -it  --pid="host" --network="host"   --security-opt seccomp=unconfined  --privileged -v /var/run/:/var/run/ port-exporter:1.0  sh
+
+ ./port_exporter  --v=5  --logtostderr=true
+```
+
+Then we can get the metrics from the port_exporter:
+
+```
+curl container:9103/metrics
+```
+
+
 
 ## Running tests
 
@@ -63,3 +77,4 @@ make test
 ```
 
 
+## Kubernetes Support
